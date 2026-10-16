@@ -1,0 +1,127 @@
+:root{
+  --bg:#2f3fe0; --ink:#fff8ec; --pink:#ff6fa5; --sun:#ffd23f; --mint:#5eead4;
+  --card:#fff8ec; --card-ink:#1d2160; --plate:#1d2160;
+  color-scheme:light;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#161a5e; --ink:#fff8ec; --card:#e9e4ff; --card-ink:#161a5e; --plate:#0c0e38;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#161a5e; --ink:#fff8ec; --card:#e9e4ff; --card-ink:#161a5e; --plate:#0c0e38;
+  color-scheme:dark;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:border-box}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:"Bricolage Grotesque","Trebuchet MS",system-ui,sans-serif;
+  line-height:1.5; overflow-x:hidden; min-height:100vh;
+}
+.wrap{max-width:960px; margin:0 auto; padding:0 20px}
+
+/* confetti */
+.confetti{display:none; position:fixed; inset:0; pointer-events:none; overflow:hidden; z-index:0}
+#blow:checked ~ .confetti{display:block}
+.confetti i{
+  position:absolute; top:-5vh; left:var(--x); width:10px; height:18px;
+  background:var(--c); border-radius:2px;
+  animation:fall var(--d) linear var(--s) infinite;
+}
+@keyframes fall{
+  to{transform:translateY(110vh) rotate(540deg)}
+}
+
+main{position:relative; z-index:1}
+
+/* hero */
+.hero{text-align:center; padding:56px 0 32px}
+.hero p.lead{margin:0 0 8px; font-size:1.15rem; font-weight:600; color:var(--sun)}
+h1{
+  margin:0; font-weight:800; line-height:.92; letter-spacing:-.03em;
+  font-size:clamp(3.2rem, 14vw, 8.5rem);
+}
+h1 .name{display:block; color:var(--pink); text-shadow:.04em .04em 0 var(--plate)}
+
+/* cake */
+.cake{position:relative; width:260px; height:250px; margin:40px auto 0}
+.layer{position:absolute; left:50%; transform:translateX(-50%); border-radius:14px}
+.l1{bottom:0; width:260px; height:84px; background:var(--pink)}
+.l2{bottom:84px; width:200px; height:70px; background:var(--sun)}
+.l3{bottom:154px; width:140px; height:56px; background:var(--mint)}
+.layer::after{
+  content:""; position:absolute; left:0; right:0; top:0; height:22px;
+  background:radial-gradient(circle at 12px 0, var(--ink) 11px, transparent 12px) 0 0/24px 22px repeat-x;
+  border-radius:14px 14px 0 0;
+}
+.plate{position:absolute; bottom:-12px; left:50%; transform:translateX(-50%); width:310px; height:14px; border-radius:8px; background:var(--plate)}
+.candle{position:absolute; bottom:210px; width:10px; height:38px; border-radius:3px; background:repeating-linear-gradient(45deg,var(--ink) 0 6px,var(--pink) 6px 12px)}
+.c1{left:calc(50% - 40px)} .c2{left:calc(50% - 5px)} .c3{left:calc(50% + 30px)}
+.flame{
+  position:absolute; left:50%; top:-22px; width:14px; height:22px; margin-left:-7px;
+  background:var(--sun); border-radius:50% 50% 50% 50% / 65% 65% 35% 35%;
+  box-shadow:0 0 18px 6px rgba(255,210,63,.55);
+  transform-origin:50% 100%; animation:flick .5s ease-in-out infinite alternate;
+  transition:opacity .25s, transform .25s;
+}
+.c2 .flame{animation-delay:.15s} .c3 .flame{animation-delay:.3s}
+@keyframes flick{from{transform:scale(1,1) rotate(-3deg)} to{transform:scale(.9,1.12) rotate(3deg)}}
+
+/* blow out toggle */
+#blow{position:absolute; opacity:0; pointer-events:none}
+.blow-btn{
+  display:inline-block; margin-top:36px; padding:14px 26px; border-radius:999px;
+  background:var(--sun); color:#1d2160; font-weight:800; font-size:1.05rem; cursor:pointer;
+  box-shadow:0 5px 0 var(--plate); user-select:none;
+  transition:transform .1s, box-shadow .1s;
+}
+.blow-btn:active{transform:translateY(4px); box-shadow:0 1px 0 var(--plate)}
+#blow:focus-visible ~ main .blow-btn{outline:3px solid var(--ink); outline-offset:4px}
+.blow-btn .after{display:none}
+#blow:checked ~ main .cake .flame{opacity:0; transform:scale(.2); animation:none; box-shadow:none}
+#blow:checked ~ main .blow-btn .before{display:none}
+#blow:checked ~ main .blow-btn .after{display:inline}
+.wish-msg{display:block; height:0; overflow:hidden; opacity:0; font-size:1.4rem; font-weight:600; transition:opacity .4s .2s, height .3s}
+#blow:checked ~ main .wish-msg{height:2.2em; opacity:1; margin-top:20px}
+
+/* wishes */
+.wishes{padding:72px 0 24px}
+.wishes h2{margin:0 0 28px; font-size:clamp(1.8rem,5vw,2.8rem); font-weight:800; letter-spacing:-.02em; text-align:center}
+.notes{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:26px}
+.note{
+  background:var(--card); color:var(--card-ink); padding:26px 24px 22px; border-radius:6px;
+  box-shadow:6px 6px 0 var(--plate); transition:transform .2s;
+}
+.note:nth-child(1){transform:rotate(-2deg)}
+.note:nth-child(2){transform:rotate(1.5deg); border-top:10px solid var(--pink)}
+.note:nth-child(3){transform:rotate(-1deg)}
+.note:nth-child(1){border-top:10px solid var(--sun)}
+.note:nth-child(3){border-top:10px solid var(--mint)}
+.note:hover{transform:rotate(0) translateY(-4px)}
+.note p{margin:0 0 14px; font-size:1.08rem}
+.note b{font-weight:800}
+
+.gallery{padding:56px 0 8px}
+.gallery h2{margin:0 0 32px; font-size:clamp(1.8rem,5vw,2.8rem); font-weight:800; letter-spacing:-.02em; text-align:center}
+.polaroids{display:flex; flex-wrap:wrap; gap:30px; justify-content:center}
+.polaroid{margin:0; width:210px; background:var(--card); color:var(--card-ink); padding:12px 12px 16px; border-radius:4px; box-shadow:6px 6px 0 var(--plate); transition:transform .2s}
+.polaroid:nth-child(1){transform:rotate(-4deg)}
+.polaroid:nth-child(2){transform:rotate(3deg)}
+.polaroid:nth-child(3){transform:rotate(-2deg)}
+.polaroid:hover{transform:rotate(0) translateY(-4px)}
+.polaroid .pic{display:block; width:100%; aspect-ratio:1; border-radius:2px; object-fit:cover}
+.polaroid figcaption{margin-top:12px; text-align:center; font-weight:600}
+
+footer{padding:56px 0 64px; text-align:center}
+footer p{margin:0; font-size:1.5rem; font-weight:800}
+footer small{display:block; margin-top:6px; opacity:.8}
+
+@media (prefers-reduced-motion:reduce){
+  #blow:checked ~ .confetti{display:none}
+  .flame{animation:none}
+}
